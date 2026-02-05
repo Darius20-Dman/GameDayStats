@@ -1,65 +1,45 @@
-// 1. Team Color Database
-const teamColors = {
-    "Kansas City Chiefs": "#e31837",
-    "Dallas Cowboys": "#003594",
-    "Green Bay Packers": "#203731",
-    "San Francisco 49ers": "#aa0000",
-    "Miami Dolphins": "#008e97",
-    "Philadelphia Eagles": "#004c54",
-    "Pittsburgh Steelers": "#FFB612",
-    "Las Vegas Raiders": "#A5ACAF"
-    // You can add more teams and hex codes here!
-};
-
-// 2. Search Player and Change Colors
 async function searchPlayer() {
     const name = document.getElementById('playerInput').value;
     const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = "Scouting...";
+    resultDiv.innerHTML = "🔍 Scouting NFL players...";
 
     try {
         const response = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${name}`);
         const data = await response.json();
 
+        // Check if we found players
         if (data.player) {
-            const player = data.player[0];
-            
-            // Apply Team Color
-            const color = teamColors[player.strTeam] || "#1a1a1a";
-            document.body.style.backgroundColor = color;
+            // FILTER: We only want players where the sport is "American Football"
+            const nflPlayers = data.player.filter(p => p.strSport === "American Football");
 
-            resultDiv.innerHTML = `
-                <div class="player-card">
-                    <img src="${player.strThumb || 'https://via.placeholder.com/150'}" style="width:100%">
-                    <h2>${player.strPlayer}</h2>
-                    <p><strong>${player.strTeam}</strong></p>
-                    <div class="stats-grid">
-                        <div class="stat-item"><span>Pos</span><b>${player.strPosition}</b></div>
-                        <div class="stat-item"><span>Height</span><b>${player.strHeight || '--'}</b></div>
-                    </div>
-                </div>`;
+            if (nflPlayers.length > 0) {
+                const player = nflPlayers[0]; // Take the best match
+                
+                // Apply Team Color
+                const color = teamColors[player.strTeam] || "#1a1a1a";
+                document.body.style.backgroundColor = color;
+
+                resultDiv.innerHTML = `
+                    <div class="player-card">
+                        <img src="${player.strThumb || 'https://via.placeholder.com/150'}" style="width:100%">
+                        <h2>${player.strPlayer}</h2>
+                        <p class="team-name">${player.strTeam} | #${player.strNumber || 'N/A'}</p>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-item"><span>Pos</span><b>${player.strPosition}</b></div>
+                            <div class="stat-item"><span>Height</span><b>${player.strHeight || '--'}</b></div>
+                            <div class="stat-item"><span>Weight</span><b>${player.strWeight || '--'}</b></div>
+                            <div class="stat-item"><span>College</span><b>${player.strCollege || 'N/A'}</b></div>
+                        </div>
+                    </div>`;
+            } else {
+                resultDiv.innerHTML = "❌ No American Football player found with that name.";
+                document.body.style.backgroundColor = "#1a1a1a"; // Reset color
+            }
+        } else {
+            resultDiv.innerHTML = "❌ Player not found.";
         }
-    } catch (e) { resultDiv.innerHTML = "Error."; }
-}
-
-// 3. Fetch News (Using a mock fetch for the news section)
-async function loadNews() {
-    const newsList = document.getElementById('news-list');
-    try {
-        // We use the sports database's general events as news for this example
-        const response = await fetch(`https://www.thesportsdb.com/api/v1/json/3/eventsseason.php?id=4391`);
-        const data = await response.json();
-        
-        newsList.innerHTML = data.events.slice(0, 5).map(event => `
-            <div class="news-item">
-                <h4>${event.strEvent}</h4>
-                <p>Date: ${event.dateEvent}</p>
-            </div>
-        `).join('');
-    } catch (e) {
-        newsList.innerHTML = "Could not load news at this time.";
+    } catch (e) { 
+        resultDiv.innerHTML = "Error connecting to the database."; 
     }
 }
-
-// Load news immediately when page opens
-loadNews();
