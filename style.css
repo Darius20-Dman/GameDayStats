@@ -1,57 +1,32 @@
-/* Stats Grid Layout */
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 20px 0;
-    background: #1e1e1e;
-    padding: 15px;
-    border-radius: 8px;
-}
-
-.stat-item {
+.main-layout {
     display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid #444;
-    padding: 5px 0;
+    gap: 20px;
+    width: 95%;
+    max-width: 1200px;
+    flex-wrap: wrap; /* Makes it stack on mobile */
 }
 
-.stat-label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    color: #888;
+/* News Section Styling */
+.news-container {
+    flex: 1;
+    min-width: 300px;
+    background: #2d2d2d;
+    padding: 20px;
+    border-radius: 12px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
-.stat-value {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #f1f1f1;
+.news-item {
+    background: #1e1e1e;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-left: 4px solid #013369;
+    border-radius: 4px;
 }
 
-.team-name {
-    color: #d50a0a;
-    font-weight: bold;
-    margin-top: -10px;
-    margin-bottom: 20px;
-}
+.news-item h4 { margin: 0 0 5px 0; font-size: 0.9rem; }
+.news-item p { font-size: 0.8rem; color: #ccc; }
 
-.bio {
-    text-align: left;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.stats-btn {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 15px;
-    background-color: #444;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 0.8rem;
-}
-
-.stats-btn:hover {
-    background-color: #666;
-}
+/* Dynamic Team Background Transition */
+body { transition: background-color 0.5s ease; }
