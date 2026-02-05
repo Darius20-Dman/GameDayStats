@@ -3,21 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFL Player Scout</title>
+    <title>Sports Analytics | Ground Zero</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>🏈 NFL Player Scout</h1>
-        <div class="search-box">
-            <input type="text" id="playerInput" placeholder="Enter Player Name (e.g. Patrick Mahomes)">
-            <button onclick="searchPlayer()">Search</button>
-        </div>
+    <div id="app">
+        <header>
+            <h1>PRO<span>STATS</span></h1>
+            <input type="text" id="searchBar" placeholder="Search teams, players, or stats...">
+        </header>
 
-        <div id="result">
-            <p>Search for a player to see their details.</p>
-        </div>
+        <main class="dashboard-grid">
+            <section class="sidebar">
+                <h3>Rankings</h3>
+                <div id="teamList"></div>
+            </section>
+
+            <section class="main-view">
+                <div id="detailsCard" class="card">
+                    <h2>Select a Team</h2>
+                    <p>Click a team on the left to view deep analytics.</p>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script src="script.js"></script>
