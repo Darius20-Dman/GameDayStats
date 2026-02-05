@@ -1,45 +1,55 @@
 async function searchPlayer() {
     const name = document.getElementById('playerInput').value;
     const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = "🔍 Scouting NFL players...";
+    
+    resultDiv.innerHTML = "<div class='loader'>🔍 Scouting player...</div>";
 
     try {
-        const response = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${name}`);
-        const data = await response.json();
+        // Step 1: Search for the player to get their ID
+        const searchResponse = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${name}`);
+        const searchData = await searchResponse.json();
 
-        // Check if we found players
-        if (data.player) {
-            // FILTER: We only want players where the sport is "American Football"
-            const nflPlayers = data.player.filter(p => p.strSport === "American Football");
-
-            if (nflPlayers.length > 0) {
-                const player = nflPlayers[0]; // Take the best match
-                
-                // Apply Team Color
-                const color = teamColors[player.strTeam] || "#1a1a1a";
-                document.body.style.backgroundColor = color;
-
-                resultDiv.innerHTML = `
-                    <div class="player-card">
-                        <img src="${player.strThumb || 'https://via.placeholder.com/150'}" style="width:100%">
-                        <h2>${player.strPlayer}</h2>
-                        <p class="team-name">${player.strTeam} | #${player.strNumber || 'N/A'}</p>
-                        
-                        <div class="stats-grid">
-                            <div class="stat-item"><span>Pos</span><b>${player.strPosition}</b></div>
-                            <div class="stat-item"><span>Height</span><b>${player.strHeight || '--'}</b></div>
-                            <div class="stat-item"><span>Weight</span><b>${player.strWeight || '--'}</b></div>
-                            <div class="stat-item"><span>College</span><b>${player.strCollege || 'N/A'}</b></div>
+        if (searchData.player) {
+            const player = searchData.player[0];
+            
+            // Step 2: Display the Stats Card
+            resultDiv.innerHTML = `
+                <div class="player-card">
+                    <img src="${player.strThumb || 'https://via.placeholder.com/150'}" alt="Player Photo">
+                    <h2>${player.strPlayer}</h2>
+                    <p class="team-name">${player.strTeam} | #${player.strNumber || 'N/A'}</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Position</span>
+                            <span class="stat-value">${player.strPosition}</span>
                         </div>
-                    </div>`;
-            } else {
-                resultDiv.innerHTML = "❌ No American Football player found with that name.";
-                document.body.style.backgroundColor = "#1a1a1a"; // Reset color
-            }
+                        <div class="stat-item">
+                            <span class="stat-label">Height</span>
+                            <span class="stat-value">${player.strHeight || '---'}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Weight</span>
+                            <span class="stat-value">${player.strWeight || '---'}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Birthplace</span>
+                            <span class="stat-value">${player.strBirthLocation || 'Unknown'}</span>
+                        </div>
+                    </div>
+
+                    <div class="bio">
+                        <h3>Scouting Report</h3>
+                        <p>${player.strDescriptionEN ? player.strDescriptionEN.substring(0, 200) + '...' : 'No bio available.'}</p>
+                    </div>
+
+                    <a href="https://www.google.com/search?q=${player.strPlayer}+stats" target="_blank" class="stats-btn">View Live Season Stats</a>
+                </div>
+            `;
         } else {
-            resultDiv.innerHTML = "❌ Player not found.";
+            resultDiv.innerHTML = "❌ Player not found. Try 'Patrick Mahomes'.";
         }
-    } catch (e) { 
-        resultDiv.innerHTML = "Error connecting to the database."; 
+    } catch (error) {
+        resultDiv.innerHTML = "Error connecting to the stadium database.";
     }
 }
