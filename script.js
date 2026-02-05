@@ -2,28 +2,54 @@ async function searchPlayer() {
     const name = document.getElementById('playerInput').value;
     const resultDiv = document.getElementById('result');
     
-    resultDiv.innerHTML = "Searching...";
+    resultDiv.innerHTML = "<div class='loader'>🔍 Scouting player...</div>";
 
     try {
-        // This fetches from a free public sports database
-        const response = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${name}`);
-        const data = await response.json();
+        // Step 1: Search for the player to get their ID
+        const searchResponse = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${name}`);
+        const searchData = await searchResponse.json();
 
-        if (data.player) {
-            const player = data.player[0];
+        if (searchData.player) {
+            const player = searchData.player[0];
+            
+            // Step 2: Display the Stats Card
             resultDiv.innerHTML = `
                 <div class="player-card">
                     <img src="${player.strThumb || 'https://via.placeholder.com/150'}" alt="Player Photo">
                     <h2>${player.strPlayer}</h2>
-                    <p><strong>Team:</strong> ${player.strTeam}</p>
-                    <p><strong>Position:</strong> ${player.strPosition}</p>
-                    <p style="font-size: 0.8rem; color: #ccc;">${player.strDescriptionEN ? player.strDescriptionEN.substring(0, 150) + '...' : ''}</p>
+                    <p class="team-name">${player.strTeam} | #${player.strNumber || 'N/A'}</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Position</span>
+                            <span class="stat-value">${player.strPosition}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Height</span>
+                            <span class="stat-value">${player.strHeight || '---'}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Weight</span>
+                            <span class="stat-value">${player.strWeight || '---'}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Birthplace</span>
+                            <span class="stat-value">${player.strBirthLocation || 'Unknown'}</span>
+                        </div>
+                    </div>
+
+                    <div class="bio">
+                        <h3>Scouting Report</h3>
+                        <p>${player.strDescriptionEN ? player.strDescriptionEN.substring(0, 200) + '...' : 'No bio available.'}</p>
+                    </div>
+
+                    <a href="https://www.google.com/search?q=${player.strPlayer}+stats" target="_blank" class="stats-btn">View Live Season Stats</a>
                 </div>
             `;
         } else {
-            resultDiv.innerHTML = "❌ Player not found. Try a full name like 'Tom Brady'.";
+            resultDiv.innerHTML = "❌ Player not found. Try 'Patrick Mahomes'.";
         }
     } catch (error) {
-        resultDiv.innerHTML = "Error fetching data. Check your connection.";
+        resultDiv.innerHTML = "Error connecting to the stadium database.";
     }
 }
