@@ -1,7 +1,25 @@
-<div class="stats-container">
-  <input type="text" id="playerSearch" placeholder="Search Player (e.g. Patrick Mahomes)">
-  <button onclick="getStats()">Get Stats</button>
-  
-  <div id="statsResult">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFL Player Scout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>🏈 NFL Player Scout</h1>
+        <div class="search-box">
+            <input type="text" id="playerInput" placeholder="Enter Player Name (e.g. Patrick Mahomes)">
+            <button onclick="searchPlayer()">Search</button>
+        </div>
+
+        <div id="result">
+            <p>Search for a player to see their details.</p>
+        </div>
     </div>
-</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
