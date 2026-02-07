@@ -3,173 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFL GRIDIRON SCOUT</title>
+    <title>NFL GRIDIRON SCOUT Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Modern Sporty Aesthetic */
         :root {
             --nfl-blue: #013369;
             --nfl-red: #D50A0A;
-            --dark-bg: #121212;
-            --card-bg: #1e1e1e;
-            --text-gold: #fbff00;
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --accent-blue: #0084ff;
         }
 
         body { 
-            font-family: 'Avenir Next', 'Impact', sans-serif; 
-            background: linear-gradient(135deg, #121212 0%, #013369 100%);
+            font-family: 'Segoe UI', Impact, sans-serif; 
+            background: var(--dark-bg);
             color: white;
-            margin: 0;
-            padding: 20px;
+            margin: 0; padding: 20px;
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
         }
 
-        h1 { 
-            text-transform: uppercase; 
-            letter-spacing: 3px; 
-            font-style: italic;
-            text-shadow: 2px 2px #D50A0A;
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
+        .container { max-width: 1100px; margin: 0 auto; text-align: center; flex-grow: 1; }
 
-        .container { max-width: 1000px; margin: 0 auto; text-align: center; }
-
-        /* Search Bar Styling */
         .search-box {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            margin-bottom: 40px;
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-bottom: 4px solid var(--nfl-red);
         }
 
-        input { 
-            padding: 15px; 
-            width: 60%; 
-            border: none; 
-            border-radius: 30px 0 0 30px; 
-            font-size: 18px;
-            outline: none;
-        }
+        input { padding: 12px; width: 50%; border-radius: 5px 0 0 5px; border: none; font-size: 16px; outline: none; }
+        button { padding: 12px 25px; border-radius: 0 5px 5px 0; border: none; background: var(--nfl-red); color: white; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
-        button { 
-            padding: 15px 30px; 
-            background: var(--nfl-red); 
-            color: white; 
-            border: none; 
-            border-radius: 0 30px 30px 0; 
-            cursor: pointer; 
-            font-weight: 900;
-            text-transform: uppercase;
-            transition: 0.2s;
-        }
+        #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
 
-        button:hover { background: #ff1a1a; transform: scale(1.05); }
-
-        /* Player Card "Trading Card" Look */
-        #results { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 25px; 
-        }
-
-        .player-card { 
-            background: var(--card-bg); 
-            border: 3px solid #333;
-            border-radius: 15px; 
-            overflow: hidden;
-            position: relative;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .player-card:hover { 
-            border-color: var(--text-gold);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(251, 255, 0, 0.4);
-        }
-
-        .player-card img { 
-            width: 100%; 
-            height: 300px;
-            object-fit: cover;
-            border-bottom: 5px solid var(--nfl-blue);
-        }
-
-        .info { padding: 15px; }
+        .player-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; }
+        .player-card img { width: 100%; height: 380px; object-fit: cover; background: #222; }
+        .player-header { padding: 15px; background: var(--nfl-blue); }
+        .player-name { font-size: 1.6rem; font-weight: 900; text-transform: uppercase; margin: 0; }
         
-        .player-name { 
-            font-size: 1.4rem; 
-            font-weight: 900; 
-            margin: 5px 0; 
-            text-transform: uppercase;
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; padding: 20px; gap: 15px; background: #111; flex-grow: 1; }
+        .stat-label { font-size: 0.75rem; color: #777; text-transform: uppercase; font-weight: bold; }
+        .stat-value { color: white; font-weight: bold; display: block; font-size: 1.1rem; }
+
+        .social-links { padding: 15px; background: #1a1a1a; border-top: 1px solid #333; display: flex; justify-content: center; gap: 20px; }
+        .social-icon { font-size: 1.5rem; color: #ccc; text-decoration: none; transition: 0.3s; }
+        .social-icon:hover { transform: scale(1.2); color: white; }
+
+        /* Footer Bug Link Styling */
+        footer { margin-top: 50px; padding: 20px; border-top: 1px solid #222; text-align: center; }
+        .bug-link {
+            color: #777;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-
-        .team-badge {
-            display: inline-block;
-            background: var(--nfl-blue);
-            padding: 5px 12px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .position { color: var(--text-gold); font-weight: bold; }
-
+        .bug-link:hover { color: var(--nfl-red); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Gridiron Scout</h1>
-        <p>Real-time NFL Player Database</p>
+        <h1 style="font-style: italic;">GRIDIRON <span style="color:var(--nfl-red)">SCOUT</span></h1>
         
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search Player (e.g. Lamar Jackson)">
-            <button onclick="searchPlayer()">Analyze</button>
+            <input type="text" id="searchInput" placeholder="Enter NFL Player Name...">
+            <button onclick="searchPlayer()">Analyze Player</button>
         </div>
 
-        <div id="results">
-            </div>
+        <div id="results"></div>
     </div>
 
+    <footer>
+        <a href="https://github.com/YOUR-USERNAME/YOUR-USERNAME.github.io/issues/new" target="_blank" class="bug-link">
+            <i class="fas fa-bug"></i> Found a bug? Report it here.
+        </a>
+    </footer>
+
     <script>
+        function calculateAge(birthDate) {
+            if (!birthDate) return "N/A";
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const m = today.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+            return age;
+        }
+
         async function searchPlayer() {
             const name = document.getElementById('searchInput').value;
             const resultsDiv = document.getElementById('results');
             if(!name) return;
-            
-            resultsDiv.innerHTML = "<h3>LOADING SCOUTING REPORT...</h3>";
+            resultsDiv.innerHTML = "<h2>ACCESSING SCOUTING REVIEWS...</h2>";
 
             try {
                 const response = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${name}`);
                 const data = await response.json();
-                resultsDiv.innerHTML = ""; 
+                resultsDiv.innerHTML = "";
 
                 if (data.player) {
                     const nflPlayers = data.player.filter(p => p.strSport === "American Football");
+                    if(nflPlayers.length === 0) {
+                        resultsDiv.innerHTML = "<h2>NO NFL DATA FOUND</h2>";
+                        return;
+                    }
 
                     nflPlayers.forEach(player => {
+                        const age = calculateAge(player.dateBorn);
+                        const photo = player.strRender || player.strThumb || 'https://via.placeholder.com/400x500/222/555?text=No+Photo';
+
+                        let socialHtml = '<div class="social-links">';
+                        if(player.strTwitter) socialHtml += `<a href="https://${player.strTwitter}" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>`;
+                        if(player.strInstagram) socialHtml += `<a href="https://${player.strInstagram}" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>`;
+                        socialHtml += '</div>';
+
                         resultsDiv.innerHTML += `
                             <div class="player-card">
-                                <img src="${player.strThumb || 'https://via.placeholder.com/300x400/222/555?text=No+Photo'}" alt="${player.strPlayer}">
-                                <div class="info">
-                                    <div class="team-badge">${player.strTeam}</div>
-                                    <div class="player-name">${player.strPlayer}</div>
-                                    <div class="position">${player.strPosition}</div>
-                                    <p style="font-size: 0.8rem; color: #aaa; margin-top: 10px;">
-                                        ${player.strHeight || 'N/A'} | ${player.strWeight || 'N/A'}
-                                    </p>
+                                <img src="${photo}" alt="${player.strPlayer}">
+                                <div class="player-header">
+                                    <h2 class="player-name">${player.strPlayer}</h2>
+                                    <div style="font-size:0.8rem; color:#add8ff;">${player.strPosition}</div>
                                 </div>
+                                <div class="stats-grid">
+                                    <div class="stat-item"><span class="stat-label">Team</span><span class="stat-value">${player.strTeam}</span></div>
+                                    <div class="stat-item"><span class="stat-label">Hometown</span><span class="stat-value">${player.strBirthLocation || 'N/A'}</span></div>
+                                    <div class="stat-item"><span class="stat-label">Height</span><span class="stat-value">${player.strHeight || 'N/A'}</span></div>
+                                    <div class="stat-item"><span class="stat-label">Weight</span><span class="stat-value">${player.strWeight || 'N/A'}</span></div>
+                                    <div class="stat-item"><span class="stat-label">Age</span><span class="stat-value">${age}</span></div>
+                                    <div class="stat-item"><span class="stat-label">College</span><span class="stat-value">${player.strCollege || 'N/A'}</span></div>
+                                </div>
+                                ${socialHtml}
                             </div>
                         `;
                     });
                 } else {
-                    resultsDiv.innerHTML = "<h3>PLAYER NOT FOUND IN ACTIVE ROSTER.</h3>";
+                    resultsDiv.innerHTML = "<h2>PLAYER NOT FOUND</h2>";
                 }
             } catch (error) {
-                resultsDiv.innerHTML = "<h3>CONNECTION ERROR. TRY AGAIN.</h3>";
+                resultsDiv.innerHTML = "<h2>CONNECTION FAILED</h2>";
             }
         }
     </script>
